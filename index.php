@@ -11,81 +11,75 @@
   // Instancias de controladores
   $categoryController = new CategoryController();
 
-  // Llamada al método `listCategories` para devolver la información de todas las categorías
-  $categories = $categoryController->listCategories();
+  // Llamada al método `getListCategories` para devolver la información de todas las categorías
+  $categories = $categoryController->getListCategories();
 ?>
 
 <main>
   <div class="container">
     <h1>Título Principal de la Página</h1>
     <div class="row">
+
       <!-- Listado de categorías -->
       <div class="col-12 col-lg-8 col-md-7 col-sm-12 col-contenido">
-        <div class="categoria categoria-1">
-          <h2>Título de la categoría 1</h2>
-          <div class="card card-a">
-            <?php require 'includes/card.html'?>
-          </div>
-          <div class="card card-b nueva">
-            <?php require 'includes/card.html'?>
-          </div>
-          <div class="card card-c">
-            <?php require 'includes/card.html'?>
-          </div>
-          <div class="card card-a">
-            <?php require 'includes/card.html'?>
-          </div>
-          <div class="card card-b nueva">
-            <?php require 'includes/card.html'?>
-          </div>
-          <div class="boton">
-            <a href="#!" class="btn btn-success">Ver más <i class="fas fa-plus"></i></a>
-          </div>
-        </div>
-        <div class="categoria categoria-2">
-          <h2>Título de la categoría 2</h2>
-          <div class="card card-b">
-            <?php require 'includes/card.html'?>
-          </div>
-          <div class="card card-c nueva">
-            <?php require 'includes/card.html'?>
-          </div>
-          <div class="card card-a">
-            <?php require 'includes/card.html'?>
-          </div>
-          <div class="card card-b">
-            <?php require 'includes/card.html'?>
-          </div>
-          <div class="card card-c nueva">
-            <?php require 'includes/card.html'?>
-          </div>
-          <div class="boton">
-            <a href="#!" class="btn btn-success">Ver más <i class="fas fa-plus"></i></a>
-          </div>
-        </div>
-        <div class="categoria categoria-3">
-          <h2>Título de la categoría 3</h2>
-          <div class="card card-a">
-            <?php require 'includes/card.html'?>
-          </div>
-          <div class="card card-c">
-            <?php require 'includes/card.html'?>
-          </div>
-          <div class="card card-b nueva">
-            <?php require 'includes/card.html'?>
-          </div>
-          <div class="card card-a">
-            <?php require 'includes/card.html'?>
-          </div>
-          <div class="card card-c">
-            <?php require 'includes/card.html'?>
-          </div>
-          <div class="boton">
-            <a href="#!" class="btn btn-success">Ver más <i class="fas fa-plus"></i></a>
-          </div>
-        </div>
+
+        <?php if (!empty($categories)): ?>
+          <?php foreach ($categories as $category): ?>
+            <div class="categoria categoria-<?php echo $category['idCategoria']; ?>">
+              <h2><?php echo htmlspecialchars($category['sNombre']); ?></h2>
+
+              <!-- Items de la categoría actual -->
+                <?php 
+                  $items = $categoryController->getItemsByCategory($category['idCategoria']);
+                  $totalItems = $categoryController->getCountItemsByCategory($category['idCategoria']);
+                ?>
+
+                <?php if (!empty($items)): ?>
+
+                  <div class="items-container">
+                  <?php foreach ($items as $item): ?>                      
+                    <div class="card <?php echo htmlspecialchars($item['sTipoCard']); ?>">
+                      <div class="card-body"> <!-- card-body -->
+                        <div class="txt">
+                          <p>
+                            <?php echo htmlspecialchars($item['sNombre']); ?>
+                          </p>
+                        </div>
+                        <div class="img">
+                          <img src="<?php echo htmlspecialchars($item['sRutaImg']); ?>" alt="" class="img-fluid">
+                        </div>
+                      </div> <!-- card-body -->
+                    </div>
+                  <?php endforeach; ?>
+                  </div>
+
+                  <!-- Botón mostrar más. Solo se ve si hay más de 5 items -->
+                  <?php if ($totalItems > 5): ?>
+                    <div class="boton">
+                      <button class="btn btn-success ver-mas" data-category="<?php echo $category['idCategoria']; ?>" data-offset="5" data-count="<?php echo $totalItems; ?>">
+                        Ver más <i class="fas fa-plus"></i>
+                      </button>
+
+                      <button class="btn btn-info ver-menos" style="display: none;" data-category="<?php echo $category['idCategoria']; ?>" data-limit="5">
+                        Ver menos <i class="fas fa-minus"></i>
+                      </button>
+                    </div>
+                  <?php endif; ?>
+                  <!-- Botón mostrar más. Solo se ve si hay más de 5 items -->
+                <?php else: ?>
+                  <p>No hay ítems disponibles en esta categoría</p>
+                <?php endif; ?>
+              <!-- Items de la categoría actual -->
+            </div>
+          <?php endforeach; ?>
+        <?php else: ?>
+            <p>No hay categorías disponibles</p>
+        <?php endif; ?>
+
       </div>
       <!-- Listado de categorías -->
+      
+      <!-- Formulario -->
       <div class="col-12 col-lg-4 col-md-5 col-sm-12 col-contenido">
         <div class="formulario">
           <h3>Formulario</h3>
@@ -136,13 +130,13 @@
           </form>
         </div>
       </div>
+      <!-- Formulario -->
+
     </div>
   </div>
 </main>
 <aside>
-  <div class="container">
-
-  </div>
+  <div class="container"></div>
 </aside>
 
 <?php require 'includes/footer.html'?>
