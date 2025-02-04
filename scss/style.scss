@@ -1,0 +1,242 @@
+@charset "UTF-8";
+
+$primario-1: #e6eeff;
+$primario-2: #41464e;
+$secundario-1: #ffe6fc;
+$secundario-2: #ad54a3;
+
+$categoria-1-a: #b8f1c7;
+$categoria-1-b: #1e8638;
+$categoria-2-a: #f1eda9;
+$categoria-2-b: #968914;
+$categoria-3-a: #f7bbc8;
+$categoria-3-b: #8f2243;
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+}
+body {
+  .nav-principal {
+    background-color: $primario-1;
+    .container {
+      ul.nav {
+        height: 60px;
+        line-height: 60px;
+        li.nav-item {
+          height: 60px;
+          line-height: 60px;
+          a.nav-link {
+            height: 60px;
+            line-height: 60px;
+            &.active {
+              background-color: $secundario-1;
+            }
+          }
+        }
+      }
+    }
+  }
+  main {
+    min-height: calc(100% - 260px);
+    padding: 30px 0;
+    & * {
+      color: $primario-2;
+    }
+    .container {
+      h1 {
+        margin-bottom: 15px;
+      }
+      .row {
+        .col-contenido {
+          .categoria {
+            margin: 10px 0 20px 0;
+            h2 {
+            }
+            .card {
+              position: relative;
+              margin: 10px 0;
+              .card-body {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: space-between;
+                align-items: center;
+                .txt {
+                  p {
+                    margin: 0;
+                  }
+                }
+                .img {
+                  position: relative;
+                  overflow: hidden;
+                  min-width: 100px;
+                  max-width: 150px;
+                  min-height: 60px;
+                  max-height: 100px;
+                  img {
+                    position: absolute;
+                    left: 50%;
+                    top: 50%;
+                    transform: translate(-50%, -50%);
+                  }
+                }
+              }
+              &.nueva:after {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                align-items: center;
+                font-size: 1.4rem;
+                font-weight: 900;
+                color: #fff;
+                background-color: hsla(217, 9%, 28%, 0.8);
+                content: "NUEVA";
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+              }
+              &.card-a {
+                .card-body {
+                  .txt {
+                  }
+                  .img {
+                    width: 150px;
+                    height: 100px;
+                  }
+                }
+              }
+              &.card-b {
+                .card-body {
+                  .txt {
+                    order: 2;
+                  }
+                  .img {
+                    order: 1;
+                    width: 50px;
+                    min-width: 50px;
+                  }
+                }
+              }
+              &.card-c {
+                .card-body {
+                  .txt {
+                  }
+                  .img {
+                  }
+                }
+              }
+            }
+            &.categoria-1 {
+              h2 {
+                color: $categoria-1-b;
+              }
+              .card {
+                background-color: $categoria-1-a;
+                border-color: $categoria-1-b;
+                .txt {
+                  p {
+                    color: $categoria-1-b;
+                  }
+                }
+              }
+            }
+            &.categoria-2 {
+              h2 {
+                color: $categoria-2-b;
+              }
+              .card {
+                background-color: $categoria-2-a;
+                border-color: $categoria-2-b;
+                .txt {
+                  p {
+                    color: $categoria-2-b;
+                  }
+                }
+              }
+            }
+            &.categoria-3 {
+              h2 {
+                color: $categoria-3-b;
+              }
+              .card {
+                background-color: $categoria-3-a;
+                border-color: $categoria-3-b;
+                .txt {
+                  p {
+                    color: $categoria-3-b;
+                  }
+                }
+              }
+            }
+            .boton {
+              padding-bottom: 20px;
+              border-bottom: 2px solid $primario-1;
+              text-align: center;
+              i {
+                color: #fff;
+              }
+            }
+          }
+          .formulario {
+            h3 {
+            }
+            #formulario {
+              background-color: $primario-2;
+              padding: 20px 15px;
+              .form-group,
+              .form-check{
+                label{
+                  color: $primario-1;
+                }
+              }
+              .form-check{
+                label{
+                  font-size: 0.9rem;
+                }
+              }
+              .boton{
+                text-align: center;
+                padding: 15px 0 0 0;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  aside {
+    margin: 30px 0;
+    height: 400px;
+    background-color: $primario-1;
+    background-image: url(../img/fondo.jpg);
+    background-position: center center;
+    background-size: cover;
+    .container {
+    }
+  }
+  footer {
+    padding: 15px 0;
+    font-size: 0.9rem;
+    background-color: $primario-2;
+    min-height: 200px;
+    .container {
+      height: 100%;
+      .row {
+        align-items: center;
+        height: 100%;
+        .col-contenido {
+          a {
+            color: $secundario-1;
+          }
+          p {
+            color: #fff;
+            margin: 0;
+          }
+        }
+      }
+    }
+  }
+}
