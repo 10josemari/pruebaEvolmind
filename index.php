@@ -79,6 +79,10 @@
       
       <!-- Formulario -->
       <div class="col-12 col-lg-4 col-md-5 col-sm-12 col-contenido">
+        <!-- div para almacenar el alert de respuesta -->
+        <div class="alertForm"></div>
+        <!-- div para almacenar el alert de respuesta -->
+
         <div class="formulario">
           <h3>Formulario</h3>
           <form action="" id="formulario">

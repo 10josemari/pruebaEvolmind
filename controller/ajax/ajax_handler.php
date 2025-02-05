@@ -8,6 +8,9 @@ include_once '../CategoryController.php';
 // Incluimos el controlador de Pais para llamar al método `getProvByPaisId`
 include_once '../CountryController.php';
 
+// Incluimos el controlador de Cupon para llamar al método `insertCupon`
+include_once '../CuponController.php';
+
 // Verificamos que desde la llamada AJAX traemos el parámetro action con el valor de `getItemsByCategoryMore`
 if (isset($_GET['action']) && $_GET['action'] == 'getItemsByCategoryMore') {
     // Instancia de controlador
@@ -78,5 +81,37 @@ if (isset($_GET['action']) && $_GET['action'] == 'getProvByPaisId') {
                 'items' => 'empty',
             ]);
         }
+    }
+}
+
+// Verificamos que desde la llamada AJAX traemos el parámetro action con el valor de `createRegisterCupon`
+if (isset($_POST['action']) && $_POST['action'] == 'createRegisterCupon') {
+    // Instancia de controlador
+    $cuponController = new CuponController();
+
+    // Recibimos los datos del formulario
+    $formData = $_POST['data'];
+
+    // Llamamos al método que se encarga de crear cupon pasando formData
+    $cupon = $cuponController->createRegisterCupon($formData);
+
+    // Si se devuelve un array, se indica que hay errores (validación)
+    if (is_array($cupon)) {
+        if (isset($cupon['error']) && $cupon['error'] == 'technical_error') {
+            // Si es un error técnico, no mostramos los detalles
+            echo json_encode([
+                'error' => 'Hubo un error técnico. Por favor, intenta más tarde.'
+            ]);
+        } else {
+            // Si es otro tipo de error, mostramos los errores específicos
+            echo json_encode([
+                'errors' => $cupon,
+            ]);
+        }
+    } else {
+        // Si la respuesta es exitosa, devolvemos el resultado
+        echo json_encode([
+            'result' => $cupon,
+        ]);
     }
 }

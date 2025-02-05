@@ -12,7 +12,7 @@ class CountryController {
     private $paisModel;
 
     /**
-     * Constructor de la clase PaisController
+     * Constructor de la clase CountryController
      */
     public function __construct()
     {
