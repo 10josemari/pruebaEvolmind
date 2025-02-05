@@ -15,11 +15,15 @@ class Validator {
         // Validación del campo 'name'
         if (empty($formData["name"])) {
             $this->errors["name"] = "Nombre es obligatorio";
+        } elseif (!preg_match("/^[a-zA-ZáéíóúÁÉÍÓÚ\s]+$/", $formData["name"])) {
+            $this->errors["name"] = "El nombre solo puede contener letras y espacios";
         }
 
         // Validación del campo "phone"
         if (empty($formData["phone"])) {
             $this->errors["phone"] = "Teléfono es obligatorio";
+        } elseif (!preg_match("/^[0-9]+$/", $formData["phone"])) {
+            $this->errors["phone"] = "El teléfono solo puede contener números";
         }
 
         // Validación del campo 'email'
