@@ -5,6 +5,9 @@ include_once '../../database/DbConnect.php';
 // Incluimos el controlador de Category para llamar al método `getItemsByCategory`
 include_once '../CategoryController.php';
 
+// Incluimos el controlador de Pais para llamar al método `getProvByPaisId`
+include_once '../CountryController.php';
+
 // Verificamos que desde la llamada AJAX traemos el parámetro action con el valor de `getItemsByCategoryMore`
 if (isset($_GET['action']) && $_GET['action'] == 'getItemsByCategoryMore') {
     // Instancia de controlador
@@ -48,6 +51,31 @@ if (isset($_GET['action']) && $_GET['action'] == 'getItemsByCategoryLess') {
             echo json_encode([
                 'success' => true,
                 'items' => $items,
+            ]);
+        }
+    }
+}
+
+// Verificamos que desde la llamada AJAX traemos el parámetro action con el valor de `getProvByPaisId`
+if (isset($_GET['action']) && $_GET['action'] == 'getProvByPaisId') {
+    // Instancia de controlador
+    $countryController = new CountryController();
+
+    // Tratamos los parámetros para llamar al método `getProvByPaisId`
+    if (isset($_GET['pais_id'])) {
+        $paisId = $_GET['pais_id'];
+
+        // Obtener las provincias según el pais
+        $items = $countryController->getProvByPaisId($paisId);
+
+        // Si se encuentran ítems, devolverlos en formato JSON
+        if (!empty($items)) {
+            echo json_encode([
+                'items' => $items,
+            ]);
+        } else {
+            echo json_encode([
+                'items' => 'empty',
             ]);
         }
     }

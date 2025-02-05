@@ -33,22 +33,6 @@ class Database {
             // Almacenamos la conexión en una variable global para poder acceder a ella desde cualquier ubicación del código
             $GLOBALS['db'] = $this->conn;
         } catch (PDOException $e) {
-            // En caso de error, lo volcamos a un archivo log para tener los errores localizados
-            /*$errorMessage = "Error de conexión: " . $e->getMessage();
-            $logFile = 'storage/log/log_' . date('Y-m-d') . '.txt';
-
-            // Verificamos si la carpeta 'storage/log' existe, si no, la creamos
-            if (!is_dir('storage/log')) {
-                mkdir('storage/log', 0777, true);
-            }
-
-            // Escribimos el error en el archivo log
-            file_put_contents($logFile, date('Y-m-d H:i:s') . " - " . $errorMessage . PHP_EOL, FILE_APPEND);
-
-            // Retornamos null para así manejar el error
-            return null;*/
-            $GLOBALS['db'] = 'Error de conexión';
-
             return null;
         }
 

@@ -7,12 +7,16 @@
 
   // Includes de controladores
   include_once 'controller/CategoryController.php';
+  include_once 'controller/CountryController.php';
 
   // Instancias de controladores
   $categoryController = new CategoryController();
+  $countryController = new CountryController();
 
   // Llamada al método `getListCategories` para devolver la información de todas las categorías
   $categories = $categoryController->getListCategories();
+  // Llamada al método `getListCountries` para devolver la información de todos los paises
+  $paises = $countryController->getListCountries();
 ?>
 
 <main>
@@ -22,28 +26,24 @@
 
       <!-- Listado de categorías -->
       <div class="col-12 col-lg-8 col-md-7 col-sm-12 col-contenido">
-
         <?php if (!empty($categories)): ?>
           <?php foreach ($categories as $category): ?>
             <div class="categoria categoria-<?php echo $category['idCategoria']; ?>">
               <h2><?php echo htmlspecialchars($category['sNombre']); ?></h2>
 
               <!-- Items de la categoría actual -->
-                <?php 
-                  $items = $categoryController->getItemsByCategory($category['idCategoria']);
-                  $totalItems = $categoryController->getCountItemsByCategory($category['idCategoria']);
-                ?>
+              <?php
+                $items = $categoryController->getItemsByCategory($category['idCategoria']);
+                $totalItems = $categoryController->getCountItemsByCategory($category['idCategoria']);
+              ?>
 
-                <?php if (!empty($items)): ?>
-
-                  <div class="items-container">
+              <?php if (!empty($items)): ?>
+                <div class="items-container">
                   <?php foreach ($items as $item): ?>                      
                     <div class="card <?php echo htmlspecialchars($item['sTipoCard']); ?>">
                       <div class="card-body"> <!-- card-body -->
                         <div class="txt">
-                          <p>
-                            <?php echo htmlspecialchars($item['sNombre']); ?>
-                          </p>
+                          <p><?php echo htmlspecialchars($item['sNombre']); ?></p>
                         </div>
                         <div class="img">
                           <img src="<?php echo htmlspecialchars($item['sRutaImg']); ?>" alt="" class="img-fluid">
@@ -51,31 +51,29 @@
                       </div> <!-- card-body -->
                     </div>
                   <?php endforeach; ?>
+                </div>
+
+                <!-- Botón mostrar más. Solo se ve si hay más de 5 items -->
+                <?php if ($totalItems > 5): ?>
+                  <div class="boton">
+                    <button class="btn btn-success ver-mas" data-category="<?php echo $category['idCategoria']; ?>" data-offset="5" data-count="<?php echo $totalItems; ?>">
+                      Ver más <i class="fas fa-plus"></i>
+                    </button>
+                    <button class="btn btn-info ver-menos" style="display: none;" data-category="<?php echo $category['idCategoria']; ?>" data-limit="5">
+                      Ver menos <i class="fas fa-minus"></i>
+                    </button>
                   </div>
-
-                  <!-- Botón mostrar más. Solo se ve si hay más de 5 items -->
-                  <?php if ($totalItems > 5): ?>
-                    <div class="boton">
-                      <button class="btn btn-success ver-mas" data-category="<?php echo $category['idCategoria']; ?>" data-offset="5" data-count="<?php echo $totalItems; ?>">
-                        Ver más <i class="fas fa-plus"></i>
-                      </button>
-
-                      <button class="btn btn-info ver-menos" style="display: none;" data-category="<?php echo $category['idCategoria']; ?>" data-limit="5">
-                        Ver menos <i class="fas fa-minus"></i>
-                      </button>
-                    </div>
-                  <?php endif; ?>
-                  <!-- Botón mostrar más. Solo se ve si hay más de 5 items -->
-                <?php else: ?>
-                  <p>No hay ítems disponibles en esta categoría</p>
                 <?php endif; ?>
+                <!-- Botón mostrar más. Solo se ve si hay más de 5 items -->
+              <?php else: ?>
+                <p>No hay ítems disponibles en esta categoría</p>
+              <?php endif; ?>
               <!-- Items de la categoría actual -->
             </div>
           <?php endforeach; ?>
         <?php else: ?>
             <p>No hay categorías disponibles</p>
         <?php endif; ?>
-
       </div>
       <!-- Listado de categorías -->
       
@@ -99,23 +97,14 @@
             <div class="form-group">
               <label for="pais">País</label>
               <select class="form-control" id="pais">
-                <option>País 1</option>
-                <option>País 2</option>
-                <option>País 3</option>
-                <option>País 4</option>
-                <option>País 5</option>
+                <?php foreach ($paises as $pais): ?>
+                  <option value="<?php echo $pais['PAIS_ID'] ?>"><?php echo htmlspecialchars($pais['DESCRIPCION_CORTA']); ?></option>
+                <?php endforeach; ?>
               </select>
             </div>
-            <div class="form-group">
-              <label for="prov">Provincia</label>
-              <select class="form-control" id="prov">
-                <option>Provincia 1</option>
-                <option>Provincia 2</option>
-                <option>Provincia 3</option>
-                <option>Provincia 4</option>
-                <option>Provincia 5</option>
-              </select>
-            </div>
+            <!-- Provincias -->
+            <div class="form-group" id="prov-container"></div>
+            <!-- Provincias -->
             <div class="form-group">
               <label for="cp">C.P.</label>
               <input type="text" class="form-control" id="cp" placeholder="Código postal">

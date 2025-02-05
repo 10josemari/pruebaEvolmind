@@ -10,8 +10,6 @@ class Category {
 
     /**
      * Constructor recibe la conexión a la BD
-     *
-     * @return array Devuelve un array con la información de las categorías existentes
      */
     public function __construct($db) {
         $this->conn = $db;
@@ -39,14 +37,12 @@ class Category {
      * @return array Devuelve un array de la categoría filtrada con sus respectivos ítems
      */
     public function getItemsByCategoryId(int $id, int $limit, int $offset): array {
-        $query = "
-            SELECT idListado, idCategoria, sNombre, sTipoCard,
+        $query = "SELECT idListado, idCategoria, sNombre, sTipoCard,
                 sRutaImg, bNueva, iOrden
             FROM tbllistado tLis
             WHERE tLis.idCategoria = :id
             ORDER BY tLis.iOrden ASC
-            LIMIT :limit OFFSET :offset
-        ";
+            LIMIT :limit OFFSET :offset";
 
         // Preparamos la consulta para ser ejecutada
         $stmt = $this->conn->prepare($query);
