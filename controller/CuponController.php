@@ -6,6 +6,9 @@ include_once __DIR__ . '/../models/Cupon.php';
 // Incluir archivos para manejo de validación
 require_once __DIR__ . '/../utils/Validator.php';
 
+// Incluir el archivo helper
+include_once __DIR__ . '/../utils/helpers.php';
+
 /**
  * Clase CuponController
  *
@@ -48,6 +51,9 @@ class CuponController {
             // Retornamos lo que devuelva el insert
             return $insertResult;
         } catch (Exception $e) {
+            // Llamar al helper para registrar el error
+            logError("[CuponController.php] Error: " . $e->getMessage());
+
             // Capturamos cualquier error inesperado y lo retornamos
             return ['error' => 'technical_error'];
         }

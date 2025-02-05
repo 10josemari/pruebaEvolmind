@@ -1,4 +1,8 @@
 <?php
+
+// Incluir el archivo helper
+include_once __DIR__ . '/../utils/helpers.php';
+
 /**
  * Clase Database
  * 
@@ -33,6 +37,10 @@ class Database {
             // Almacenamos la conexión en una variable global para poder acceder a ella desde cualquier ubicación del código
             $GLOBALS['db'] = $this->conn;
         } catch (PDOException $e) {
+            // Llamar al helper para registrar el error
+            logError("[Database.php] Error de conexión: " . $e->getMessage());
+
+            // Lanzamos una excepción para que el error se pueda manejar en index.php
             return null;
         }
 
