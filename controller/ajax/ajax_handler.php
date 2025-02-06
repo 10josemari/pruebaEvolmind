@@ -1,23 +1,16 @@
 <?php
-// Archivo de conexión para iniciar la conexión a BD
+// Incluir archivos de conexión y controladores
 include_once '../../database/DbConnect.php';
-
-// Incluimos el controlador de Category para llamar al método `getItemsByCategory`
 include_once '../CategoryController.php';
-
-// Incluimos el controlador de Pais para llamar al método `getProvByPaisId`
 include_once '../CountryController.php';
-
-// Incluimos el controlador de Cupon para llamar al método `insertCupon`
 include_once '../CuponController.php';
 
-// Verificamos que desde la llamada AJAX traemos el parámetro action con el valor de `getItemsByCategoryMore`
+// Obtener ítems por categoría (mostrar más)
 if (isset($_GET['action']) && $_GET['action'] == 'getItemsByCategoryMore') {
-    // Instancia de controlador
     $categoryController = new CategoryController();
 
-    // Tratamos los parámetros para llamar al método `getItemsByCategory`
     if (isset($_GET['category_id'])) {
+        // Tratamos los parámetros que uesaremos al llamar a `getItemsByCategory`
         $categoryId = $_GET['category_id'];
         $limit = isset($_GET['limit']) ? $_GET['limit'] : 5;
         $offset = isset($_GET['offset']) ? $_GET['offset'] : 0;
@@ -35,13 +28,12 @@ if (isset($_GET['action']) && $_GET['action'] == 'getItemsByCategoryMore') {
     }
 }
 
-// Verificamos que desde la llamada AJAX traemos el parámetro action con el valor de `getItemsByCategoryLess`
+// Obtener ítems por categoría (mostrar menos)
 if (isset($_GET['action']) && $_GET['action'] == 'getItemsByCategoryLess') {
-    // Instancia de controlador
     $categoryController = new CategoryController();
 
-    // Tratamos los parámetros para llamar al método `getItemsByCategory`
     if (isset($_GET['category_id'])) {
+        // Tratamos los parámetros que uesaremos al llamar a `getItemsByCategory`
         $categoryId = $_GET['category_id'];
         $offset = isset($_GET['offset']) ? (int)$_GET['offset'] : 0;
         $limit = isset($_GET['limit']) ? (int)$_GET['limit'] : 5;
@@ -59,13 +51,12 @@ if (isset($_GET['action']) && $_GET['action'] == 'getItemsByCategoryLess') {
     }
 }
 
-// Verificamos que desde la llamada AJAX traemos el parámetro action con el valor de `getProvByPaisId`
+// Obtener provincias por país
 if (isset($_GET['action']) && $_GET['action'] == 'getProvByPaisId') {
-    // Instancia de controlador
     $countryController = new CountryController();
 
-    // Tratamos los parámetros para llamar al método `getProvByPaisId`
     if (isset($_GET['pais_id'])) {
+        // Tratamos el parámetro que uesaremos al llamar a `getItemsByCategory`
         $paisId = $_GET['pais_id'];
 
         // Obtener las provincias según el pais
@@ -77,6 +68,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'getProvByPaisId') {
                 'items' => $items,
             ]);
         } else {
+            // Si el país pasado no tiene provincias, devolvemos un JSON con el valor 'empty'
             echo json_encode([
                 'items' => 'empty',
             ]);
@@ -84,15 +76,14 @@ if (isset($_GET['action']) && $_GET['action'] == 'getProvByPaisId') {
     }
 }
 
-// Verificamos que desde la llamada AJAX traemos el parámetro action con el valor de `createRegisterCupon`
+// Insertar registro en tabla `tblcupon`
 if (isset($_POST['action']) && $_POST['action'] == 'createRegisterCupon') {
-    // Instancia de controlador
     $cuponController = new CuponController();
 
-    // Recibimos los datos del formulario
+    // Tratamos los datos de formulario que uesaremos al llamar a `createRegisterCupon`
     $formData = $_POST['data'];
 
-    // Llamamos al método que se encarga de crear cupon pasando formData
+    // Crear cupon pasando los datos del formulario
     $cupon = $cuponController->createRegisterCupon($formData);
 
     // Si se devuelve un array, se indica que hay errores (validación)
@@ -100,10 +91,10 @@ if (isset($_POST['action']) && $_POST['action'] == 'createRegisterCupon') {
         if (isset($cupon['error']) && $cupon['error'] == 'technical_error') {
             // Si es un error técnico, no mostramos los detalles
             echo json_encode([
-                'error' => 'Hubo un error técnico. Por favor, intenta más tarde.'
+                'error' => 'Hubo un error al procesar tu solicitud. Por favor, inténtalo de nuevo más tarde.'
             ]);
         } else {
-            // Si es otro tipo de error, mostramos los errores específicos
+            // Si es otro tipo de error, mostramos los errores específicos (validación)
             echo json_encode([
                 'errors' => $cupon,
             ]);

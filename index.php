@@ -1,22 +1,18 @@
 <?php 
-  // Cabecera de la página
-  require 'includes/header.html';
+// Cabecera de la página
+require 'includes/header.html'; // Se incluye el archivo de cabecera HTML
 
-  // Archivo de conexión para iniciar la conexión a BD
-  include_once 'database/DbConnect.php';
+// Incluir archivos de conexión y controladores
+include_once 'database/DbConnect.php';
+include_once 'controller/CategoryController.php';
+include_once 'controller/CountryController.php';
 
-  // Includes de controladores
-  include_once 'controller/CategoryController.php';
-  include_once 'controller/CountryController.php';
+// Instancias de controladores
+$categoryController = new CategoryController(); // Instancia para manejar las categorías
+$countryController = new CountryController(); // Instancia para manejar los países
 
-  // Instancias de controladores
-  $categoryController = new CategoryController();
-  $countryController = new CountryController();
-
-  // Llamada al método `getListCategories` para devolver la información de todas las categorías
-  $categories = $categoryController->getListCategories();
-  // Llamada al método `getListCountries` para devolver la información de todos los paises
-  $paises = $countryController->getListCountries();
+$categories = $categoryController->getListCategories(); // método `getListCategories` para todas las categorías
+$paises = $countryController->getListCountries(); // método `getListCountries` para todos los países
 ?>
 
 <main>
@@ -66,24 +62,24 @@
                 <?php endif; ?>
                 <!-- Botón mostrar más. Solo se ve si hay más de 5 items -->
               <?php else: ?>
-                <p>No hay ítems disponibles en esta categoría</p>
+                <div class="alert alert-primary" role="alert">No hay ítems disponibles en esta categoría</div>
               <?php endif; ?>
               <!-- Items de la categoría actual -->
             </div>
           <?php endforeach; ?>
         <?php else: ?>
-            <p>No hay categorías disponibles</p>
+            <div class="alert alert-primary" role="alert">No hay categorías disponibles</div>
         <?php endif; ?>
       </div>
       <!-- Listado de categorías -->
       
       <!-- Formulario -->
       <div class="col-12 col-lg-4 col-md-5 col-sm-12 col-contenido">
-        <!-- div para almacenar el alert de respuesta -->
-        <div class="alertForm"></div>
-        <!-- div para almacenar el alert de respuesta -->
-
         <div class="formulario">
+          <!-- div para almacenar el alert de respuesta -->
+          <div class="alertForm"></div>
+          <!-- div para almacenar el alert de respuesta -->
+
           <h3>Formulario</h3>
           <form action="" id="formulario">
             <div class="form-group">

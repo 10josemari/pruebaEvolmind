@@ -1,5 +1,8 @@
 <?php
 
+// Incluir el archivo helper
+include_once __DIR__ . '/../utils/helpers.php';
+
 /**
  * Clase Category
  *
@@ -16,19 +19,26 @@ class Category {
     }
 
     /**
-     * Obtiene las categorías de `tblcategorias`
+     * Obtiene las categorías
      *
-     * @return array Devuelve un array con la información de las categorías existentes
+     * @return array Devuelve un array con las categorías existentes
      */
     public function getAllCategories(): array {
-        $query = "SELECT idCategoria, sNombre, iOrden FROM tblcategorias ORDER BY iOrden ASC";
-        $stmt = $this->conn->prepare($query);
-        $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        try {
+            $query = "SELECT idCategoria, sNombre, iOrden FROM tblcategorias ORDER BY iOrden ASC";
+            $stmt = $this->conn->prepare($query);
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            // Registramos el error en el log
+            logError("[Category.php] Error: " . $e->getMessage());
+
+            return [];
+        }
     }
 
     /**
-     * Obtiene los ítems de `tbllistado` según el id de categoría pasado
+     * Obtiene los ítems de `tbllistado` según el id de categoría pasada
      * Paginación mediante los parámetros `$limit` y `$offset`
      *
      * @param int $id Id de la categoría por la que filtraremos
@@ -37,26 +47,27 @@ class Category {
      * @return array Devuelve un array de la categoría filtrada con sus respectivos ítems
      */
     public function getItemsByCategoryId(int $id, int $limit, int $offset): array {
-        $query = "SELECT idListado, idCategoria, sNombre, sTipoCard,
+        try {
+            $query = "SELECT idListado, idCategoria, sNombre, sTipoCard,
                 sRutaImg, bNueva, iOrden
-            FROM tbllistado tLis
-            WHERE tLis.idCategoria = :id
-            ORDER BY tLis.iOrden ASC
-            LIMIT :limit OFFSET :offset";
+                FROM tbllistado tLis
+                WHERE tLis.idCategoria = :id
+                ORDER BY tLis.iOrden ASC
+                LIMIT :limit OFFSET :offset";
+            $stmt = $this->conn->prepare($query);
+            $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+            $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+            $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+            $stmt->execute(); // Ejecutamos la consulta
 
-        // Preparamos la consulta para ser ejecutada
-        $stmt = $this->conn->prepare($query);
+            // Devolvemos los resultados obtenidos en formato de array asociativo
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            // Registramos el error en el log
+            logError("[Category.php] Error: " . $e->getMessage());
 
-        // Parámetros `:id`, `:limit` y `:offset`
-        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-        $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
-        $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
-
-        // Ejecutamos la consulta
-        $stmt->execute();
-
-        // Devolvemos los resultados obtenidos en formato de array asociativo
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+            return [];
+        }
     }
 
     /**
@@ -66,18 +77,19 @@ class Category {
      * @return int Devuelve un int según el número de ítems
      */
     public function getCountItemsByCategory(int $id): int {
-        $query = "SELECT COUNT(*) FROM tbllistado tLis WHERE idCategoria = :id";
+        try {
+            $query = "SELECT COUNT(*) FROM tbllistado tLis WHERE idCategoria = :id";
+            $stmt = $this->conn->prepare($query);
+            $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+            $stmt->execute(); // Ejecutamos la consulta
 
-        // Preparamos la consulta para ser ejecutada
-        $stmt = $this->conn->prepare($query);
+            // Devolvemos el resultado obtenido en formato entero
+            return $stmt->fetchColumn();
+        } catch (PDOException $e) {
+            // Registramos el error en el log
+            logError("[Category.php] Error: " . $e->getMessage());
 
-        // Parámetros `:id`
-        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-
-        // Ejecutamos la consulta
-        $stmt->execute();
-
-        // Devolvemos el resultado obtenido en formato entero
-        return $stmt->fetchColumn();
+            return 0;
+        }
     }
 }

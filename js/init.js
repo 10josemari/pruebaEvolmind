@@ -10,7 +10,6 @@ $(document).ready(function() {
         // Mostrar el botón de "Ver menos"
         $('.ver-menos[data-category="'+categoryId+'"]').show();
 
-        // Enviar la solicitud AJAX
         $.ajax({
             url: '../controller/ajax/ajax_handler.php',
             type: 'GET',
@@ -23,7 +22,9 @@ $(document).ready(function() {
             success: function(response) {
                 var data = JSON.parse(response);
 
+                // Entramos si success es true
                 if (data.success) {
+                    // Localizamos el contenedor donde añadiremos los nuevos items
                     var itemsContainer = $('.categoria-' + categoryId).find('.items-container');
 
                     // Agregar los nuevos ítems al contenedor
@@ -53,9 +54,6 @@ $(document).ready(function() {
                         button.hide();
                     }
                 }
-            },
-            error: function() {
-                alert('Error al cargar los ítems.');
             }
         });
     });
@@ -71,7 +69,6 @@ $(document).ready(function() {
         // Mostrar el botón de "Ver más"
         $('.ver-mas[data-category="'+categoryId+'"]').show();
 
-        // Enviar la solicitud AJAX
         $.ajax({
             url: '../controller/ajax/ajax_handler.php',
             type: 'GET',
@@ -83,10 +80,12 @@ $(document).ready(function() {
             success: function(response) {
                 var data = JSON.parse(response);
 
+                // Entramos si success es true
                 if (data.success) {
+                    // Localizamos el contenedor donde colocaremos los items
                     var itemsContainer = $('.categoria-' + categoryId).find('.items-container');
 
-                    // Limpiar y volver a agregar solo los ítems que queremos mostrar
+                    // Limpiar y volver a agregar solo los ítems que queremos mostrar en el contenedor
                     itemsContainer.empty();
                     data.items.forEach(function(item) {
                         var itemHtml = `
@@ -116,9 +115,6 @@ $(document).ready(function() {
                         button.hide();
                     }
                 }
-            },
-            error: function() {
-                alert('Error al reducir los ítems.');
             }
         });
     });

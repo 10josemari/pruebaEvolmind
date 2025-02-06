@@ -30,31 +30,33 @@ class CuponController {
     }
 
     /**
-     * Insertamos un registro en la tabla `tblcupon`
+     * Insertar un registro en la tabla `tblcupon`
      *
      * @param array $formData Datos del formulario a insertar
-     * @return mixed Devuelve true si la inserción fue exitosa o un array con los errores
+     * @return array|string|bool Devuelve `true` si la inserción fue exitosa, un `array` con errores o un `string` en caso de fallo técnico.
      */
     public function createRegisterCupon($formData): mixed {
         try {
-            // Realizamos la validación de los datos
+            // Validamos los datos y los devolvemos si hay errores
             $errors = $this->validator->validateData($formData);
-        
-            // Si hay errores, los retornamos y detenemos la ejecución
             if (!empty($errors)) {
-                return $errors; // Esto termina la ejecución de la función si hay errores
+                return $errors;
             }
         
-            // Si no hay errores, intentamos insertar el cupon en la base de datos
+            // Si no hay errores, insertamos el cupon en BD
             $insertResult = $this->cuponModel->insertCupon($formData);
+            if($insertResult == false){
+                // Retornamos un error que trataremos en la salida del archivo AJAX `ajax_handler`
+                return ['error' => 'technical_error'];
+            }
 
-            // Retornamos lo que devuelva el insert
-            return $insertResult;
+            // Si esta todo correcto, retornamos true
+            return true;
         } catch (Exception $e) {
-            // Llamar al helper para registrar el error
+            // Registramos el error en el log
             logError("[CuponController.php] Error: " . $e->getMessage());
 
-            // Capturamos cualquier error inesperado y lo retornamos
+            // Retornamos un error que trataremos en la salida del archivo AJAX `ajax_handler`
             return ['error' => 'technical_error'];
         }
     }

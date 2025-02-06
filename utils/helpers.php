@@ -1,12 +1,14 @@
 <?php
-/**
- * Helper para el manejo de errores y escritura en log
- * 
- * Este helper maneja la escritura de errores en un archivo log.
- * Crea el archivo y las carpetas si no existen, y escribe el error.
- */
 
+/**
+ * Registra errores en un archivo de log diario.
+ *
+ * Este helper maneja la escritura de errores en un archivo de log dentro de `storage/log/`
+ *
+ * @param string $errorMessage Mensaje de error a registrar en el log
+ */
 function logError($errorMessage) {
+    // Ruta y nombre del archivo
     $logDir = __DIR__ . '/../storage/log';
     $logFile = $logDir . '/log_' . date('Y-m-d') . '.txt';
 

@@ -6,7 +6,7 @@ include_once __DIR__ . '/../models/Category.php';
 /**
  * Clase CategoryController
  *
- * Esta clase es responsable de gestionar las operaciones relacionadas con las categorías en la aplicación
+ * Esta clase es responsable de gestionar las operaciones relacionadas con las categorías
  */
 class CategoryController {
     private $categoryModel;
@@ -26,7 +26,6 @@ class CategoryController {
      * @return array Devuelve un array con la información de todas las categorías existentes
      */
     public function getListCategories(): array {
-        // Devolvemos información de las categorías
         return $this->categoryModel->getAllCategories();
     }
 
@@ -39,7 +38,6 @@ class CategoryController {
      * @return array Devuelve un array con los ítems de la categoría especificada
      */
     public function getItemsByCategory(int $id, int $limit = 5, int $offset = 0): array {
-        // Devolvemos los items según la categoría
         return $this->categoryModel->getItemsByCategoryId($id, $limit, $offset);
     }
 
@@ -50,7 +48,6 @@ class CategoryController {
      * @return int Devuelve un int según el número de ítems
      */
     public function getCountItemsByCategory(int $id): int {
-        // Devolvemos el número de items según la categoría
         return $this->categoryModel->getCountItemsByCategory($id);
     }
 }

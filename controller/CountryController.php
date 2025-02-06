@@ -26,7 +26,6 @@ class CountryController {
      * @return array Devuelve un array con la información de todos los paises
      */
     public function getListCountries(): array {
-        // Devolvemos información de los paises
         return $this->paisModel->getAllCountries();
     }
 
@@ -37,7 +36,6 @@ class CountryController {
      * @return array Devuelve un array con las provincias del país especificado
      */
     public function getProvByPaisId(int $id): array {
-        // Devolvemos las provincias según el país
         return $this->paisModel->getProvByPaisId($id);
     }
 }

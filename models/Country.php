@@ -1,5 +1,8 @@
 <?php
 
+// Incluir el archivo helper
+include_once __DIR__ . '/../utils/helpers.php';
+
 /**
  * Clase Country
  *
@@ -9,22 +12,29 @@ class Country {
     private $conn;
 
     /**
-     * Constructor recibe la conexión a la BD
+     * Constructor que recibe la conexión a la BD
      */
     public function __construct($db) {
         $this->conn = $db;
     }
 
     /**
-     * Obtiene los paises de `CMP_PAISES`
+     * Obtiene todos los paises
      *
-     * @return array Devuelve un array con la información de los paises existentes
+     * @return array Devuelve un array con los paises existentes
      */
     public function getAllCountries(): array {
-        $query = "SELECT PAIS_ID, DESCRIPCION_CORTA FROM CMP_PAISES cp ORDER BY cp.PAIS_ID ASC";
-        $stmt = $this->conn->prepare($query);
-        $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        try {
+            $query = "SELECT PAIS_ID, DESCRIPCION_CORTA FROM CMP_PAISES cp ORDER BY cp.PAIS_ID ASC";
+            $stmt = $this->conn->prepare($query);
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            // Registramos el error en el log
+            logError("[Country.php] Error: " . $e->getMessage());
+
+            return [];
+        }
     }
 
     /**
@@ -34,20 +44,21 @@ class Country {
      * @return array Devuelve un array con las provincias del país especificado
      */
     public function getProvByPaisId(int $id): array {
-        $query = "SELECT PROVINCIA_ID, NOMBRE 
-            FROM CMP_PROVINCIAS cprov 
-            WHERE cprov.PAIS_ID = :id";
+        try {
+            $query = "SELECT PROVINCIA_ID, NOMBRE
+                FROM CMP_PROVINCIAS cprov
+                WHERE cprov.PAIS_ID = :id";
+            $stmt = $this->conn->prepare($query);
+            $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+            $stmt->execute(); // Ejecutamos la consulta
 
-        // Preparamos la consulta para ser ejecutada
-        $stmt = $this->conn->prepare($query);
+            // Devolvemos los resultados obtenidos en formato de array asociativo
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            // Registramos el error en el log
+            logError("[Country.php] Error: " . $e->getMessage());
 
-        // Parámetro `:id`
-        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-
-        // Ejecutamos la consulta
-        $stmt->execute();
-
-        // Devolvemos los resultados obtenidos en formato de array asociativo
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+            return [];
+        }
     }
 }
